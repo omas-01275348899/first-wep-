@@ -1,0 +1,46 @@
+<!DOCTYPE html>
+<html lang="ar" dir="rtl">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>متجر عمر إكس | الطلبات</title>
+  <link rel="stylesheet" href="style.css" />
+</head>
+<body>
+  <header class="header">
+    <a class="logo" href="index.html">متجر عمر إكس</a>
+
+    <nav class="nav">
+      <a href="index.html">الرئيسية</a>
+      <a href="shop.html">المتجر</a>
+      <a href="add-product.html">إضافة منتج</a>
+      <a class="active" href="orders.html">الطلبات</a>
+      <a href="contact.html">تواصل معنا</a>
+    </nav>
+
+    <a class="cart-btn" href="cart.html">السلة <span class="cart-count">0</span></a>
+  </header>
+
+  <main>
+    <section class="page-title">
+      <p class="eyebrow">إدارة الطلبات</p>
+      <h1>الطلبات</h1>
+      <p>هنا تظهر بيانات العملاء والمنتجات المطلوبة والإجمالي.</p>
+    </section>
+
+    <section class="section">
+      <div class="section-heading">
+        <h2>الطلبات المحفوظة</h2>
+        <button class="clear-cart" id="clearOrdersBtn" type="button">مسح كل الطلبات</button>
+      </div>
+
+      <div class="orders-list" id="ordersList"></div>
+    </section>
+  </main>
+
+  <footer class="footer">
+    <p>&copy; 2026 متجر عمر إكس. جميع الحقوق محفوظة.</p>
+  </footer>
+  <script src="script.js"></script>
+</body>
+</html>

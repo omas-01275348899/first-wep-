@@ -1,0 +1,78 @@
+<!DOCTYPE html>
+<html lang="ar" dir="rtl">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>متجر عمر إكس | إضافة منتج</title>
+  <link rel="stylesheet" href="style.css" />
+</head>
+<body>
+  <header class="header">
+    <a class="logo" href="index.html">متجر عمر إكس</a>
+
+    <nav class="nav">
+      <a href="index.html">الرئيسية</a>
+      <a href="shop.html">المتجر</a>
+      <a class="active" href="add-product.html">إضافة منتج</a>
+      <a href="orders.html">الطلبات</a>
+      <a href="contact.html">تواصل معنا</a>
+    </nav>
+
+    <a class="cart-btn" href="cart.html">السلة <span class="cart-count">0</span></a>
+  </header>
+
+  <main>
+    <section class="page-title">
+      <p class="eyebrow">إدارة المنتجات</p>
+      <h1>إضافة منتج جديد</h1>
+      <p>اكتب بيانات المنتج، ويمكنك إضافة صورة من جهازك أو رابط صورة من الإنترنت.</p>
+    </section>
+
+    <section class="section admin-layout">
+      <form class="admin-form" id="productForm">
+        <label for="productName">اسم المنتج</label>
+        <input id="productName" type="text" placeholder="مثال: ريسيفر HD" required />
+
+        <label for="productPrice">السعر</label>
+        <input id="productPrice" type="number" min="1" step="0.01" placeholder="مثال: 250" required />
+
+        <label for="productDescription">وصف المنتج</label>
+        <textarea id="productDescription" rows="5" placeholder="اكتب وصف مختصر للمنتج" required></textarea>
+
+        <label for="productImage">صورة من جهازك</label>
+        <input id="productImage" type="file" accept="image/*" />
+
+        <label for="productImageUrl">أو رابط صورة</label>
+        <input id="productImageUrl" type="url" placeholder="https://example.com/image.jpg" />
+
+        <button type="submit">حفظ المنتج</button>
+        <p class="form-note" id="productMessage"></p>
+      </form>
+
+      <aside class="admin-preview">
+        <h2>معاينة المنتج</h2>
+        <article class="product-card preview-card">
+          <img id="previewImage" src="https://images.unsplash.com/photo-1556742502-ec7c0e9f34b1?auto=format&fit=crop&w=900&q=80" alt="معاينة المنتج" />
+          <h3 id="previewName">اسم المنتج</h3>
+          <p id="previewPrice">$0.00</p>
+          <span id="previewDescription" class="product-description">وصف المنتج سيظهر هنا.</span>
+          <button type="button">إضافة للسلة</button>
+        </article>
+      </aside>
+    </section>
+
+    <section class="section saved-products-section">
+      <div class="section-heading">
+        <h2>المنتجات المحفوظة</h2>
+        <a href="shop.html">عرض المتجر</a>
+      </div>
+      <div class="saved-products" id="savedProducts"></div>
+    </section>
+  </main>
+
+  <footer class="footer">
+    <p>&copy; 2026 متجر عمر إكس. جميع الحقوق محفوظة.</p>
+  </footer>
+  <script src="script.js"></script>
+</body>
+</html>

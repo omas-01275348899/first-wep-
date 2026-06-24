@@ -1,0 +1,62 @@
+<!DOCTYPE html>
+<html lang="ar" dir="rtl">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>elmagic_store</title>
+  <link rel="stylesheet" href="style.css" />
+</head>
+<body>
+  <header class="header">
+    <a class="logo" href="index.html">elmagic_store</a>
+
+    <nav class="nav">
+      <a href="index.html">الرئيسية</a>
+      <a href="shop.html">المتجر</a>
+     <!-- <a href="add-product.html">إضافة منتج</a> 
+      <a href="orders.html">الطلبات</a>-->
+      <a href="contact.html">تواصل معنا</a>
+    </nav>
+
+    <a class="cart-btn" href="cart.html">السلة <span class="cart-count">0</span></a>
+  </header>
+
+  <main>
+    <section class="page-title">
+      <p class="eyebrow">بيانات العميل</p>
+      <h1>إكمال الطلب</h1>
+      <p>اكتب الاسم ورقم الهاتف والعنوان،ة.</p>
+    </section>
+
+    <section class="section checkout-layout">
+      <form class="checkout-form" id="checkoutForm">
+        <label for="customerName">الاسم</label>
+        <input id="customerName" type="text" placeholder="اسمك " required />
+
+        <label for="customerPhone">رقم الهاتف</label>
+        <input id="customerPhone" type="tel" placeholder="رقمك " required />
+
+        <label for="customerAddress">العنوان</label>
+        <textarea id="customerAddress" rows="5" placeholder="المحافظة، المنطقة، الشارع، رقم المنزل" required></textarea>
+
+        <button type="submit">إرسال الطلب</button>
+        <p class="form-note" id="checkoutMessage"></p>
+      </form>
+
+      <aside class="checkout-summary">
+        <h2>منتجات الطلب</h2>
+        <div id="checkoutItems"></div>
+        <div class="summary-row">
+          <span>الإجمالي</span>
+          <strong id="checkoutTotal">$0.00</strong>
+        </div>
+      </aside>
+    </section>
+  </main>
+
+  <footer class="footer">
+    <p>&copy; 2026 elmagic_store. جميع الحقوق محفوظة.</p>
+  </footer>
+  <script src="script.js"></script>
+</body>
+</html>

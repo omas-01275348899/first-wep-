@@ -1,0 +1,55 @@
+<!DOCTYPE html>
+<html lang="ar" dir="rtl">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>متجر عمر إكس | السلة</title>
+  <link rel="stylesheet" href="style.css" />
+</head>
+<body>
+  <header class="header">
+    <a class="logo" href="index.html">متجر عمر إكس</a>
+
+    <nav class="nav">
+      <a href="index.html">الرئيسية</a>
+      <a href="shop.html">المتجر</a>
+     <!-- <a href="add-product.html">إضافة منتج</a> 
+      <a href="orders.html">الطلبات</a>-->
+      <a href="contact.html">تواصل معنا</a>
+    </nav>
+
+    <a class="cart-btn active" href="cart.html">السلة <span class="cart-count">0</span></a>
+  </header>
+
+  <main>
+    <section class="page-title">
+      <p class="eyebrow">طلبك الحالي</p>
+      <h1>سلة المشتريات</h1>
+      <p>راجع المنتجات والكميات قبل إدخال بيانات الطلب.</p>
+    </section>
+
+    <section class="section cart-layout">
+      <div class="cart-items" id="cartItems"></div>
+
+      <aside class="cart-summary">
+        <h2>ملخص الطلب</h2>
+        <div class="summary-row">
+          <span>عدد المنتجات</span>
+          <strong id="summaryItems">0</strong>
+        </div>
+        <div class="summary-row">
+          <span>الإجمالي</span>
+          <strong id="summaryTotal">$0.00</strong>
+        </div>
+        <button id="checkoutBtn" type="button">إكمال الطلب</button>
+        <button class="clear-cart" id="clearCartBtn" type="button">مسح السلة</button>
+      </aside>
+    </section>
+  </main>
+
+  <footer class="footer">
+    <p>&copy; 2026 متجر عمر إكس. جميع الحقوق محفوظة.</p>
+  </footer>
+  <script src="script.js"></script>
+</body>
+</html>
