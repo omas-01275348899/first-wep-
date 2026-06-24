@@ -110,6 +110,7 @@ a {
   background:
     url("selia.png");
   background-position: center;
+  background-repeat: no-repeat;
   background-size: 100% auto;
   color: #ffffff;
   display: flex;
