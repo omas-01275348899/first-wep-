@@ -66,7 +66,12 @@ function addToCart(product) {
 
 function setupAddToCartButtons() {
   document.querySelectorAll(".product-card:not(.preview-card) button").forEach((button) => {
+    if (button.dataset.cartBound === "true") {
+      return;
+    }
+
     const originalText = button.textContent;
+    button.dataset.cartBound = "true";
 
     button.addEventListener("click", () => {
       const card = button.closest(".product-card");
@@ -84,12 +89,15 @@ function setupAddToCartButtons() {
 }
 
 function createProductCard(product) {
+  const productUrl = `product-details.html?product=${encodeURIComponent(product.id)}`;
+
   return `
-    <article class="product-card" data-custom-product="${product.id}">
-      <img src="${product.image}" alt="${product.name}" />
+    <article class="product-card custom-product-card" data-custom-product="${product.id}">
+      <a href="${productUrl}" class="product-image-link">
+        <img src="${product.image}" alt="${product.name}" />
+      </a>
       <h3>${product.name}</h3>
       <p>$${Number(product.price).toFixed(2)}</p>
-      <span class="product-description">${product.description}</span>
       <button type="button">إضافة للسلة</button>
     </article>
   `;
@@ -103,12 +111,14 @@ function renderSavedProductsInShop() {
   }
 
   const products = getSavedProducts();
+  productGrid.querySelectorAll(".custom-product-card").forEach((card) => card.remove());
 
   if (products.length === 0) {
     return;
   }
 
   productGrid.insertAdjacentHTML("beforeend", products.map(createProductCard).join(""));
+  setupAddToCartButtons();
 }
 
 function getImageFromForm() {
@@ -225,14 +235,21 @@ function setupProductForm() {
         name,
         price,
         description,
-        image
+        image,
+        specs: [
+          "منتج جديد",
+          "متوفر الآن",
+          "جودة عالية",
+          "شحن سريع"
+        ]
       });
 
       saveProducts(products);
       form.reset();
       updateProductPreview();
       renderSavedProductsAdmin();
-      message.textContent = "تم حفظ المنتج بنجاح. افتح صفحة المتجر لمشاهدته.";
+      renderSavedProductsInShop();
+      message.textContent = "تم حفظ المنتج بنجاح وسيظهر في المتجر فورًا.";
     } catch (error) {
       message.textContent = error.message;
     }

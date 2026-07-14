@@ -32,8 +32,8 @@
         <p id="productDescription">وصف المنتج سيظهر هنا.</p>
         <ul class="details-list" id="productSpecs"></ul>
         <div class="details-actions">
-          <a class="primary-btn" href="cart.html">إضافة للسلة</a>
-          <a class="primary-btn order-btn" href="contact.html">اطلب الآن</a>
+          <button class="primary-btn" id="addToCartBtn" type="button">إضافة للسلة</button>
+          <button class="primary-btn order-btn" id="buyNowBtn" type="button">اطلب الآن</button>
           <a class="secondary-btn" href="shop.html">العودة للمتجر</a>
         </div>
       </div>
@@ -82,7 +82,7 @@
 
   <script src="script.js"></script>
   <script>
-    const products = {
+    const defaultProducts = {
       "receiver-hd": {
         title: "ريسيفر HD",
         description: "جهاز مخصص للاستقبال الواضح مع دعم ممتاز للترميز وتعدد القنوات، مناسب للاستخدام المنزلي والمهني.",
@@ -111,6 +111,67 @@
         image: "https://images.unsplash.com/photo-1516321318423-f06f85e504b3?auto=format&fit=crop&w=900&q=80",
         specs: ["تحسين الإشارة", "مساعدة في التثبيت", "متينة", "مناسبة للمنزل والمكتب"]
       }
+    };
+
+    const savedProducts = JSON.parse(localStorage.getItem("omarx_store_products") || "[]");
+    const allProducts = [...savedProducts, ...Object.entries(defaultProducts).map(([id, product]) => ({
+      id,
+      name: product.title,
+      price: Number(product.price.replace(/[^0-9.]/g, "")),
+      description: product.description,
+      image: product.image,
+      specs: product.specs
+    }))];
+
+    const params = new URLSearchParams(window.location.search);
+    const productKey = params.get("product") || "receiver-hd";
+    const product = allProducts.find((item) => item.id === productKey) || allProducts.find((item) => item.id === "receiver-hd") || defaultProducts["receiver-hd"];
+
+    document.getElementById("productImage").src = product.image || defaultProducts["receiver-hd"].image;
+    document.getElementById("productImage").alt = product.name || product.title;
+    document.getElementById("productTitle").textContent = product.name || product.title;
+    document.getElementById("productPrice").textContent = `$${Number(product.price || 0).toFixed(2)}`;
+    document.getElementById("productDescription").textContent = product.description || "";
+    document.getElementById("productSpecs").innerHTML = (product.specs || ["لا توجد مواصفات إضافية"]).map((spec) => `<li>${spec}</li>`).join("");
+
+    const addToCartBtn = document.getElementById("addToCartBtn");
+    const buyNowBtn = document.getElementById("buyNowBtn");
+
+    function addCurrentProductToCart() {
+      const cart = JSON.parse(localStorage.getItem("omarx_store_cart") || "[]");
+      const existingProduct = cart.find((item) => item.id === product.id);
+
+      if (existingProduct) {
+        existingProduct.quantity += 1;
+      } else {
+        cart.push({
+          id: product.id,
+          name: product.name || product.title,
+          price: Number(product.price || 0),
+          image: product.image || defaultProducts["receiver-hd"].image,
+          quantity: 1
+        });
+      }
+
+      localStorage.setItem("omarx_store_cart", JSON.stringify(cart));
+      return cart;
+    }
+
+    addToCartBtn.addEventListener("click", () => {
+      addCurrentProductToCart();
+      addToCartBtn.textContent = "تمت الإضافة";
+      setTimeout(() => {
+        addToCartBtn.textContent = "إضافة للسلة";
+      }, 800);
+    });
+
+    buyNowBtn.addEventListener("click", () => {
+      addCurrentProductToCart();
+      window.location.href = "checkout.html";
+    });
+  </script>
+</body>
+</html>
     };
 
     const params = new URLSearchParams(window.location.search);
