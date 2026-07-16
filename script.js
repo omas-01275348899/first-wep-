@@ -287,16 +287,17 @@ function setupProductForm() {
   });
 
   if (savedProducts) {
-    savedProducts.addEventListener("click", (event) => {
+    savedProducts.addEventListener("click", async (event) => {
       const button = event.target.closest("[data-delete-product]");
 
       if (!button) {
         return;
       }
 
-      const products = getSavedProducts().filter((product) => product.id !== button.dataset.deleteProduct);
+      const products = (await getSavedProducts()).filter((product) => product.id !== button.dataset.deleteProduct);
       saveProducts(products);
-      renderSavedProductsAdmin();
+      await renderSavedProductsAdmin();
+      await renderSavedProductsInShop();
     });
   }
 }
