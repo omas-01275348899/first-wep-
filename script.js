@@ -4,15 +4,72 @@ const ORDERS_KEY = "omarx_store_orders";
 const STORE_WHATSAPP_NUMBER = "201275348899";
 const DEFAULT_PRODUCT_IMAGE = "https://images.unsplash.com/photo-1556742502-ec7c0e9f34b1?auto=format&fit=crop&w=900&q=80";
 
-async function getSavedProducts() {
-  try {
-    const storedProducts = JSON.parse(localStorage.getItem(PRODUCTS_KEY)) || [];
+function getStorage() {
+  if (typeof window === "undefined") {
+    return null;
+  }
 
-    if (storedProducts.length > 0) {
-      return storedProducts;
+  try {
+    if (window.localStorage) {
+      return window.localStorage;
     }
   } catch (error) {
-    console.warn("Could not read stored products.", error);
+    console.warn("Local storage is unavailable.", error);
+  }
+
+  try {
+    if (window.sessionStorage) {
+      return window.sessionStorage;
+    }
+  } catch (error) {
+    console.warn("Session storage is unavailable.", error);
+  }
+
+  return null;
+}
+
+function readStoredJson(key, fallback = []) {
+  const storage = getStorage();
+
+  if (!storage) {
+    return fallback;
+  }
+
+  try {
+    const rawValue = storage.getItem(key);
+
+    if (!rawValue) {
+      return fallback;
+    }
+
+    return JSON.parse(rawValue);
+  } catch (error) {
+    console.warn(`Could not read storage for ${key}.`, error);
+    return fallback;
+  }
+}
+
+function writeStoredJson(key, value) {
+  const storage = getStorage();
+
+  if (!storage) {
+    return false;
+  }
+
+  try {
+    storage.setItem(key, JSON.stringify(value));
+    return true;
+  } catch (error) {
+    console.warn(`Could not save storage for ${key}.`, error);
+    return false;
+  }
+}
+
+async function getSavedProducts() {
+  const storedProducts = readStoredJson(PRODUCTS_KEY, []);
+
+  if (Array.isArray(storedProducts) && storedProducts.length > 0) {
+    return storedProducts;
   }
 
   try {
@@ -22,7 +79,9 @@ async function getSavedProducts() {
       throw new Error("Failed to load products from products.json");
     }
 
-    return await response.json();
+    const products = await response.json();
+    writeStoredJson(PRODUCTS_KEY, products);
+    return products;
   } catch (error) {
     console.warn("Falling back to default products.", error);
     return [];
@@ -30,23 +89,23 @@ async function getSavedProducts() {
 }
 
 function saveProducts(products) {
-  localStorage.setItem(PRODUCTS_KEY, JSON.stringify(products));
+  writeStoredJson(PRODUCTS_KEY, products);
 }
 
 function getOrders() {
-  return JSON.parse(localStorage.getItem(ORDERS_KEY)) || [];
+  return readStoredJson(ORDERS_KEY, []);
 }
 
 function saveOrders(orders) {
-  localStorage.setItem(ORDERS_KEY, JSON.stringify(orders));
+  writeStoredJson(ORDERS_KEY, orders);
 }
 
 function getCart() {
-  return JSON.parse(localStorage.getItem(CART_KEY)) || [];
+  return readStoredJson(CART_KEY, []);
 }
 
 function saveCart(cart) {
-  localStorage.setItem(CART_KEY, JSON.stringify(cart));
+  writeStoredJson(CART_KEY, cart);
   updateCartCount();
 }
 
@@ -596,4 +655,6 @@ async function initStore() {
   updateCartCount();
 }
 
-initStore();
+if (typeof window !== "undefined" && typeof document !== "undefined") {
+  initStore();
+}
