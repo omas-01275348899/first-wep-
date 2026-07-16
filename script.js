@@ -4,8 +4,29 @@ const ORDERS_KEY = "omarx_store_orders";
 const STORE_WHATSAPP_NUMBER = "201275348899";
 const DEFAULT_PRODUCT_IMAGE = "https://images.unsplash.com/photo-1556742502-ec7c0e9f34b1?auto=format&fit=crop&w=900&q=80";
 
-function getSavedProducts() {
-  return JSON.parse(localStorage.getItem(PRODUCTS_KEY)) || [];
+async function getSavedProducts() {
+  try {
+    const storedProducts = JSON.parse(localStorage.getItem(PRODUCTS_KEY)) || [];
+
+    if (storedProducts.length > 0) {
+      return storedProducts;
+    }
+  } catch (error) {
+    console.warn("Could not read stored products.", error);
+  }
+
+  try {
+    const response = await fetch("products.json", { cache: "no-store" });
+
+    if (!response.ok) {
+      throw new Error("Failed to load products from products.json");
+    }
+
+    return await response.json();
+  } catch (error) {
+    console.warn("Falling back to default products.", error);
+    return [];
+  }
 }
 
 function saveProducts(products) {
@@ -103,15 +124,16 @@ function createProductCard(product) {
   `;
 }
 
-function renderSavedProductsInShop() {
+async function renderSavedProductsInShop() {
   const productGrid = document.getElementById("productGrid");
 
   if (!productGrid) {
     return;
   }
 
-  const products = getSavedProducts();
   productGrid.querySelectorAll(".custom-product-card").forEach((card) => card.remove());
+
+  const products = await getSavedProducts();
 
   if (products.length === 0) {
     return;
@@ -189,14 +211,14 @@ function updateProductPreview() {
   }
 }
 
-function renderSavedProductsAdmin() {
+async function renderSavedProductsAdmin() {
   const savedProducts = document.getElementById("savedProducts");
 
   if (!savedProducts) {
     return;
   }
 
-  const products = getSavedProducts();
+  const products = await getSavedProducts();
 
   if (products.length === 0) {
     savedProducts.innerHTML = '<div class="empty-cart"><h2>لا توجد منتجات محفوظة</h2><p>أضف أول منتج من النموذج الموجود بالأعلى.</p></div>';
@@ -239,7 +261,7 @@ function setupProductForm() {
       const packageItems = parseListInput(document.getElementById("productPackage").value);
       const services = parseListInput(document.getElementById("productServices").value);
       const image = await getImageFromForm();
-      const products = getSavedProducts();
+      const products = await getSavedProducts();
 
       products.push({
         id: `${Date.now()}-${name.toLowerCase().replace(/\s+/g, "-")}`,
@@ -256,8 +278,8 @@ function setupProductForm() {
       saveProducts(products);
       form.reset();
       updateProductPreview();
-      renderSavedProductsAdmin();
-      renderSavedProductsInShop();
+      await renderSavedProductsAdmin();
+      await renderSavedProductsInShop();
       message.textContent = "تم حفظ المنتج بنجاح وسيظهر في المتجر فورًا.";
     } catch (error) {
       message.textContent = error.message;
@@ -559,14 +581,18 @@ function setupOrdersPageActions() {
   });
 }
 
-renderSavedProductsInShop();
-setupProductForm();
-renderSavedProductsAdmin();
-setupAddToCartButtons();
-setupCartPageActions();
-renderCartPage();
-renderCheckoutPage();
-setupCheckoutForm();
-renderOrdersPage();
-setupOrdersPageActions();
-updateCartCount();
+async function initStore() {
+  await renderSavedProductsInShop();
+  setupProductForm();
+  await renderSavedProductsAdmin();
+  setupAddToCartButtons();
+  setupCartPageActions();
+  renderCartPage();
+  renderCheckoutPage();
+  setupCheckoutForm();
+  renderOrdersPage();
+  setupOrdersPageActions();
+  updateCartCount();
+}
+
+initStore();
