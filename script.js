@@ -121,6 +121,13 @@ function renderSavedProductsInShop() {
   setupAddToCartButtons();
 }
 
+function parseListInput(value) {
+  return value
+    .split(/\n|،|;/)
+    .map((item) => item.trim())
+    .filter(Boolean);
+}
+
 function getImageFromForm() {
   const imageInput = document.getElementById("productImage");
   const imageUrlInput = document.getElementById("productImageUrl");
@@ -227,6 +234,10 @@ function setupProductForm() {
       const name = document.getElementById("productName").value.trim();
       const price = Number(document.getElementById("productPrice").value);
       const description = document.getElementById("productDescription").value.trim();
+      const specs = parseListInput(document.getElementById("productSpecs").value);
+      const benefits = parseListInput(document.getElementById("productBenefits").value);
+      const packageItems = parseListInput(document.getElementById("productPackage").value);
+      const services = parseListInput(document.getElementById("productServices").value);
       const image = await getImageFromForm();
       const products = getSavedProducts();
 
@@ -236,12 +247,10 @@ function setupProductForm() {
         price,
         description,
         image,
-        specs: [
-          "منتج جديد",
-          "متوفر الآن",
-          "جودة عالية",
-          "شحن سريع"
-        ]
+        specs: specs.length > 0 ? specs : ["منتج جديد", "متوفر الآن", "جودة عالية", "شحن سريع"],
+        benefits: benefits.length > 0 ? benefits : ["جودة عالية", "دعم ممتاز", "سعر مناسب"],
+        package: packageItems.length > 0 ? packageItems : ["المنتج الأساسي", "دليل الاستخدام"],
+        services: services.length > 0 ? services : ["خدمة عملاء", "ضمان رسمي"]
       });
 
       saveProducts(products);

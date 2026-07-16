@@ -21,22 +21,49 @@
     <section class="details-card" id="productDetailsCard">
       <div class="details-image">
         <img id="productImage" src="" alt="صورة المنتج" />
+        <div class="image-badge">أحدث الموديلات</div>
       </div>
       <div class="details-content">
-        <p class="eyebrow">تفاصيل الجهاز</p>
+        <span class="section-pill">تفاصيل الجهاز</span>
         <h1 id="productTitle">اسم المنتج</h1>
         <div class="price-box">
           <span class="price-label">السعر</span>
           <span class="price-value" id="productPrice">$0.00</span>
         </div>
         <p id="productDescription">وصف المنتج سيظهر هنا.</p>
-        <ul class="details-list" id="productSpecs"></ul>
         <div class="details-actions">
           <button class="primary-btn" id="addToCartBtn" type="button">إضافة للسلة</button>
           <button class="primary-btn order-btn" id="buyNowBtn" type="button">اطلب الآن</button>
           <a class="secondary-btn" href="shop.html">العودة للمتجر</a>
         </div>
+        <div class="info-strip">
+          <span>✓ شحن سريع</span>
+          <span>✓ ضمان رسمي</span>
+          <span>✓ دعم فني</span>
+        </div>
       </div>
+    </section>
+
+    <section class="details-grid">
+      <article class="info-card">
+        <h3 class="card-heading">المواصفات الفنية</h3>
+        <ul class="details-list" id="productSpecs"></ul>
+      </article>
+      <article class="info-card highlight">
+        <h3 class="card-heading">لماذا يميز هذا المنتج؟</h3>
+        <ul class="benefits-list" id="productBenefits"></ul>
+      </article>
+    </section>
+
+    <section class="details-grid secondary">
+      <article class="info-card">
+        <h3 class="card-heading">محتويات الكرتونة</h3>
+        <ul class="check-list" id="productPackage"></ul>
+      </article>
+      <article class="info-card">
+        <h3 class="card-heading">الخدمات المجانية</h3>
+        <ul class="check-list" id="productServices"></ul>
+      </article>
     </section>
 
     <section class="related-products">
@@ -88,28 +115,40 @@
         description: "جهاز مخصص للاستقبال الواضح مع دعم ممتاز للترميز وتعدد القنوات، مناسب للاستخدام المنزلي والمهني.",
         price: "$79.00",
         image: "https://images.unsplash.com/photo-1556742502-ec7c0e9f34b1?auto=format&fit=crop&w=900&q=80",
-        specs: ["دعم قنوات HD", "تجهيز مسبق قبل الشحن", "سهولة التثبيت", "مناسب للشاشات الكبيرة"]
+        specs: ["دعم قنوات HD", "تجهيز مسبق قبل الشحن", "سهولة التثبيت", "مناسب للشاشات الكبيرة"],
+        benefits: ["أداء قوي وثبات عالي", "واجهة سهلة وبديهية", "توافق واسع مع الأجهزة", "دعم مستمر والتحديثات"],
+        package: ["جهاز رئيسي", "ريموت تحكم", "كابل HDMI", "دليل تثبيت"],
+        services: ["ضمان سنة", "دعم فني مباشر", "تحديثات دورية", "شحن سريع"]
       },
       "high-quality-connector": {
         title: "وصلة عالية الجودة",
         description: "وصلة مستقرة توفر انتقال إشارة ممتاز مع تقليل الضوضاء والاعطال على مدار الاستخدام اليومي.",
         price: "$15.00",
         image: "https://images.unsplash.com/photo-1588508065123-287b28e013da?auto=format&fit=crop&w=900&q=80",
-        specs: ["إشارة مستقرة", "مقاومة ممتازة للتلف", "سهولة التوصيل", "أداء عالي في الظروف المتغيرة"]
+        specs: ["إشارة مستقرة", "مقاومة ممتازة للتلف", "سهولة التوصيل", "أداء عالي في الظروف المتغيرة"],
+        benefits: ["استقرار ممتاز في الإشارة", "مقاومة عالية للحرارة", "سهولة التوصيل", "مناسبة للاستخدام اليومي"],
+        package: ["وصلة رئيسية", "غلاف حماية", "دليل quick start"],
+        services: ["استبدال خلال 7 أيام", "دعم فني", "توصيل سريع"]
       },
       "multi-remote": {
         title: "ريموت متعدد",
         description: "ريموت عملي وسهل الاستخدام مع توافق واسع مع الأجهزة المختلفة وتعدد أوامر التحكم.",
         price: "$20.00",
         image: "https://images.unsplash.com/photo-1580894894513-541e068a3e2b?auto=format&fit=crop&w=900&q=80",
-        specs: ["تحكم سهل", "توافق واسع", "أزرار واضحة", "مناسب للاستخدام اليومي"]
+        specs: ["تحكم سهل", "توافق واسع", "أزرار واضحة", "مناسب للاستخدام اليومي"],
+        benefits: ["تنقل سهل", "توافق واسع", "أزرار واضحة", "استجابة ممتازة"],
+        package: ["ريموت أساسي", "بطاريتين", "دليل استخدام"],
+        services: ["ضمان 6 أشهر", "دعم فني", "توصيل سريع"]
       },
       "dish-lens": {
         title: "عدسة دش",
         description: "عدسة قوية تساعد على تحسين استقبال الإشارة مع ثبات في الأداء وإمكانية الاستخدام في بيئات مختلفة.",
         price: "$25.00",
         image: "https://images.unsplash.com/photo-1516321318423-f06f85e504b3?auto=format&fit=crop&w=900&q=80",
-        specs: ["تحسين الإشارة", "مساعدة في التثبيت", "متينة", "مناسبة للمنزل والمكتب"]
+        specs: ["تحسين الإشارة", "مساعدة في التثبيت", "متينة", "مناسبة للمنزل والمكتب"],
+        benefits: ["تحسين مستوى الإشارة", "ثبات ممتاز", "تصميم متين", "مناسبة للبيئات المختلفة"],
+        package: ["عدسة أساسية", "أدوات تثبيت", "دليل تثبيت"],
+        services: ["ضمان سنة", "دعم فني", "توصيل سريع"]
       }
     };
 
@@ -120,7 +159,10 @@
       price: Number(product.price.replace(/[^0-9.]/g, "")),
       description: product.description,
       image: product.image,
-      specs: product.specs
+      specs: product.specs,
+      benefits: product.benefits,
+      package: product.package,
+      services: product.services
     }))];
 
     const params = new URLSearchParams(window.location.search);
@@ -133,6 +175,9 @@
     document.getElementById("productPrice").textContent = `$${Number(product.price || 0).toFixed(2)}`;
     document.getElementById("productDescription").textContent = product.description || "";
     document.getElementById("productSpecs").innerHTML = (product.specs || ["لا توجد مواصفات إضافية"]).map((spec) => `<li>${spec}</li>`).join("");
+    document.getElementById("productBenefits").innerHTML = (product.benefits || ["جودة عالية", "دعم ممتاز"]).map((item) => `<li>${item}</li>`).join("");
+    document.getElementById("productPackage").innerHTML = (product.package || ["المنتج الأساسي"]).map((item) => `<li>${item}</li>`).join("");
+    document.getElementById("productServices").innerHTML = (product.services || ["خدمة عملاء"]).map((item) => `<li>${item}</li>`).join("");
 
     const addToCartBtn = document.getElementById("addToCartBtn");
     const buyNowBtn = document.getElementById("buyNowBtn");
@@ -169,21 +214,6 @@
       addCurrentProductToCart();
       window.location.href = "checkout.html";
     });
-  </script>
-</body>
-</html>
-    };
-
-    const params = new URLSearchParams(window.location.search);
-    const productKey = params.get("product") || "receiver-hd";
-    const product = products[productKey] || products["receiver-hd"];
-
-    document.getElementById("productImage").src = product.image;
-    document.getElementById("productImage").alt = product.title;
-    document.getElementById("productTitle").textContent = product.title;
-    document.getElementById("productPrice").textContent = product.price;
-    document.getElementById("productDescription").textContent = product.description;
-    document.getElementById("productSpecs").innerHTML = product.specs.map((spec) => `<li>${spec}</li>`).join("");
   </script>
 </body>
 </html>
