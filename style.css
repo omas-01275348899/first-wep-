@@ -245,7 +245,7 @@ main {
 }
 
 /* Hero Section */
-.hero {
+/*.hero {
   align-items: center;
   background: linear-gradient(135deg, rgba(7, 117, 236, 0.2), rgba(7, 117, 236, 0.06)), 
               url("elmagic.png");
@@ -259,6 +259,25 @@ main {
   position: relative;
   overflow: hidden;
   box-shadow: inset 0 -140px 140px rgba(2, 8, 23, 0.16);
+}*/
+ .hero{
+display: flex;
+  align-items: center;
+  justify-content: flex-start; /* يضمن محاذاة المحتوى للجانب المناسب */
+  position: relative;
+  min-height: 80vh; /* استخدام vh ليتناسب مع ارتفاع شاشة المستخدم تلقائياً */
+  padding: 80px 8%; /* حشو متوازن يحمي المحتوى من الانقطاع */
+  color: #ffffff;
+  
+  /* تحسين الخلفية وتوسيطها بشكل ذكي */
+  background: linear-gradient(135deg, rgba(7, 117, 236, 0.35), rgba(2, 8, 23, 0.85)), 
+              url("elmagic.png");
+  background-position: center;
+  background-repeat: no-repeat;
+  background-size: cover; /* يضمن تغطية الخلفية بالكامل دون قص الصورة بشكل مشوه */
+  
+  overflow: hidden;
+  box-shadow: inset 0 -100px 100px rgba(2, 8, 23, 0.5);
 }
 
 .hero::before {
