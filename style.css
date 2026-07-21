@@ -265,7 +265,7 @@ display: flex;
   align-items: center;
   justify-content: flex-start; /* يضمن محاذاة المحتوى للجانب المناسب */
   position: relative;
-  min-height: 80vh; /* استخدام vh ليتناسب مع ارتفاع شاشة المستخدم تلقائياً */
+  min-height: 40vh; /* استخدام vh ليتناسب مع ارتفاع شاشة المستخدم تلقائياً */
   padding: 80px 8%; /* حشو متوازن يحمي المحتوى من الانقطاع */
   color: #ffffff;
   

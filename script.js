@@ -3,6 +3,82 @@ const PRODUCTS_KEY = "omarx_store_products";
 const ORDERS_KEY = "omarx_store_orders";
 const STORE_WHATSAPP_NUMBER = "201275348899";
 const DEFAULT_PRODUCT_IMAGE = "https://images.unsplash.com/photo-1556742502-ec7c0e9f34b1?auto=format&fit=crop&w=900&q=80";
+const SUPABASE_URL = "https://hibhefnxtuwijrpvrbdg.supabase.co";
+const SUPABASE_ANON_KEY = "sb_publishable_4eCNpZWE6fs6E_6u185njQ_hjEY5O-6";
+const SUPABASE_PRODUCTS_TABLE = "products";
+
+function isSupabaseConfigured() {
+  return Boolean(
+    SUPABASE_URL &&
+    SUPABASE_ANON_KEY &&
+    !SUPABASE_URL.includes("YOUR_PROJECT") &&
+    !SUPABASE_ANON_KEY.includes("YOUR_")
+  );
+}
+
+async function loadProductsFromSupabase() {
+  if (!isSupabaseConfigured()) {
+    return null;
+  }
+
+  try {
+    const response = await fetch(`${SUPABASE_URL}/rest/v1/${SUPABASE_PRODUCTS_TABLE}?select=*`, {
+      headers: {
+        apikey: SUPABASE_ANON_KEY,
+        Authorization: `Bearer ${SUPABASE_ANON_KEY}`
+      }
+    });
+
+    if (!response.ok) {
+      throw new Error(`Supabase request failed with ${response.status}`);
+    }
+
+    const products = await response.json();
+    return Array.isArray(products) ? products : [];
+  } catch (error) {
+    console.warn("Could not load products from Supabase.", error);
+    return null;
+  }
+}
+
+async function saveProductsToSupabase(products) {
+  if (!isSupabaseConfigured()) {
+    return false;
+  }
+
+  try {
+    const deleteResponse = await fetch(`${SUPABASE_URL}/rest/v1/${SUPABASE_PRODUCTS_TABLE}`, {
+      method: "DELETE",
+      headers: {
+        apikey: SUPABASE_ANON_KEY,
+        Authorization: `Bearer ${SUPABASE_ANON_KEY}`
+      }
+    });
+
+    if (!deleteResponse.ok) {
+      throw new Error(`Supabase delete failed with ${deleteResponse.status}`);
+    }
+
+    const insertResponse = await fetch(`${SUPABASE_URL}/rest/v1/${SUPABASE_PRODUCTS_TABLE}`, {
+      method: "POST",
+      headers: {
+        apikey: SUPABASE_ANON_KEY,
+        Authorization: `Bearer ${SUPABASE_ANON_KEY}`,
+        "Content-Type": "application/json"
+      },
+      body: JSON.stringify(products)
+    });
+
+    if (!insertResponse.ok) {
+      throw new Error(`Supabase insert failed with ${insertResponse.status}`);
+    }
+
+    return true;
+  } catch (error) {
+    console.warn("Could not save products to Supabase.", error);
+    return false;
+  }
+}
 
 function getStorage() {
   if (typeof window === "undefined") {
@@ -66,6 +142,15 @@ function writeStoredJson(key, value) {
 }
 
 async function getSavedProducts() {
+  if (isSupabaseConfigured()) {
+    const remoteProducts = await loadProductsFromSupabase();
+
+    if (Array.isArray(remoteProducts) && remoteProducts.length > 0) {
+      writeStoredJson(PRODUCTS_KEY, remoteProducts);
+      return remoteProducts;
+    }
+  }
+
   const storedProducts = readStoredJson(PRODUCTS_KEY, []);
 
   if (Array.isArray(storedProducts) && storedProducts.length > 0) {
@@ -88,8 +173,12 @@ async function getSavedProducts() {
   }
 }
 
-function saveProducts(products) {
+async function saveProducts(products) {
   writeStoredJson(PRODUCTS_KEY, products);
+
+  if (isSupabaseConfigured()) {
+    await saveProductsToSupabase(products);
+  }
 }
 
 function getOrders() {
@@ -334,12 +423,14 @@ function setupProductForm() {
         services: services.length > 0 ? services : ["خدمة عملاء", "ضمان رسمي"]
       });
 
-      saveProducts(products);
+      await saveProducts(products);
       form.reset();
       updateProductPreview();
       await renderSavedProductsAdmin();
       await renderSavedProductsInShop();
-      message.textContent = "تم حفظ المنتج بنجاح وسيظهر في المتجر فورًا.";
+      message.textContent = isSupabaseConfigured()
+        ? "تم حفظ المنتج بنجاح وسيظهر للكل من أي جهاز."
+        : "تم حفظ المنتج بنجاح محليًا في هذا المتصفح.";
     } catch (error) {
       message.textContent = error.message;
     }
@@ -354,7 +445,7 @@ function setupProductForm() {
       }
 
       const products = (await getSavedProducts()).filter((product) => product.id !== button.dataset.deleteProduct);
-      saveProducts(products);
+      await saveProducts(products);
       await renderSavedProductsAdmin();
       await renderSavedProductsInShop();
     });
