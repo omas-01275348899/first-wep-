@@ -59,7 +59,8 @@ async function saveProductToSupabase(product) {
     });
 
     if (!insertResponse.ok) {
-      throw new Error(`Supabase insert failed with ${insertResponse.status}`);
+      const errorDetails = await insertResponse.text();
+      throw new Error(`Supabase insert failed with ${insertResponse.status}: ${errorDetails}`);
     }
 
     return true;

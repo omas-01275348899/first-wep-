@@ -13,6 +13,16 @@ create table if not exists public.products (
   services jsonb not null default '[]'::jsonb
 );
 
+-- If the table was created earlier, add any fields that were not present then.
+alter table public.products add column if not exists name text;
+alter table public.products add column if not exists price numeric;
+alter table public.products add column if not exists description text;
+alter table public.products add column if not exists image text;
+alter table public.products add column if not exists specs jsonb not null default '[]'::jsonb;
+alter table public.products add column if not exists benefits jsonb not null default '[]'::jsonb;
+alter table public.products add column if not exists package jsonb not null default '[]'::jsonb;
+alter table public.products add column if not exists services jsonb not null default '[]'::jsonb;
+
 alter table public.products enable row level security;
 
 drop policy if exists "Anyone can view products" on public.products;
