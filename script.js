@@ -41,32 +41,21 @@ async function loadProductsFromSupabase() {
   }
 }
 
-async function saveProductsToSupabase(products) {
+async function saveProductToSupabase(product) {
   if (!isSupabaseConfigured()) {
     return false;
   }
 
   try {
-    const deleteResponse = await fetch(`${SUPABASE_URL}/rest/v1/${SUPABASE_PRODUCTS_TABLE}`, {
-      method: "DELETE",
-      headers: {
-        apikey: SUPABASE_ANON_KEY,
-        Authorization: `Bearer ${SUPABASE_ANON_KEY}`
-      }
-    });
-
-    if (!deleteResponse.ok) {
-      throw new Error(`Supabase delete failed with ${deleteResponse.status}`);
-    }
-
     const insertResponse = await fetch(`${SUPABASE_URL}/rest/v1/${SUPABASE_PRODUCTS_TABLE}`, {
       method: "POST",
       headers: {
         apikey: SUPABASE_ANON_KEY,
         Authorization: `Bearer ${SUPABASE_ANON_KEY}`,
-        "Content-Type": "application/json"
+        "Content-Type": "application/json",
+        Prefer: "return=minimal"
       },
-      body: JSON.stringify(products)
+      body: JSON.stringify(product)
     });
 
     if (!insertResponse.ok) {
@@ -76,6 +65,35 @@ async function saveProductsToSupabase(products) {
     return true;
   } catch (error) {
     console.warn("Could not save products to Supabase.", error);
+    return false;
+  }
+}
+
+async function deleteProductFromSupabase(productId) {
+  if (!isSupabaseConfigured()) {
+    return false;
+  }
+
+  try {
+    const response = await fetch(
+      `${SUPABASE_URL}/rest/v1/${SUPABASE_PRODUCTS_TABLE}?id=eq.${encodeURIComponent(productId)}`,
+      {
+        method: "DELETE",
+        headers: {
+          apikey: SUPABASE_ANON_KEY,
+          Authorization: `Bearer ${SUPABASE_ANON_KEY}`,
+          Prefer: "return=minimal"
+        }
+      }
+    );
+
+    if (!response.ok) {
+      throw new Error(`Supabase delete failed with ${response.status}`);
+    }
+
+    return true;
+  } catch (error) {
+    console.warn("Could not delete product from Supabase.", error);
     return false;
   }
 }
@@ -145,7 +163,7 @@ async function getSavedProducts() {
   if (isSupabaseConfigured()) {
     const remoteProducts = await loadProductsFromSupabase();
 
-    if (Array.isArray(remoteProducts) && remoteProducts.length > 0) {
+    if (Array.isArray(remoteProducts)) {
       writeStoredJson(PRODUCTS_KEY, remoteProducts);
       return remoteProducts;
     }
@@ -173,12 +191,30 @@ async function getSavedProducts() {
   }
 }
 
-async function saveProducts(products) {
-  writeStoredJson(PRODUCTS_KEY, products);
-
+async function saveProduct(product) {
   if (isSupabaseConfigured()) {
-    await saveProductsToSupabase(products);
+    const wasSavedRemotely = await saveProductToSupabase(product);
+
+    if (!wasSavedRemotely) {
+      throw new Error("تعذر حفظ المنتج على قاعدة البيانات. تأكد من إعدادات Supabase وصلاحيات جدول المنتجات.");
+    }
   }
+
+  const products = readStoredJson(PRODUCTS_KEY, []);
+  writeStoredJson(PRODUCTS_KEY, [...products, product]);
+}
+
+async function deleteProduct(productId) {
+  if (isSupabaseConfigured()) {
+    const wasDeletedRemotely = await deleteProductFromSupabase(productId);
+
+    if (!wasDeletedRemotely) {
+      throw new Error("تعذر حذف المنتج من قاعدة البيانات. تأكد من إعدادات Supabase وصلاحيات جدول المنتجات.");
+    }
+  }
+
+  const products = readStoredJson(PRODUCTS_KEY, []).filter((product) => product.id !== productId);
+  writeStoredJson(PRODUCTS_KEY, products);
 }
 
 function getOrders() {
@@ -409,9 +445,7 @@ function setupProductForm() {
       const packageItems = parseListInput(document.getElementById("productPackage").value);
       const services = parseListInput(document.getElementById("productServices").value);
       const image = await getImageFromForm();
-      const products = await getSavedProducts();
-
-      products.push({
+      const product = {
         id: `${Date.now()}-${name.toLowerCase().replace(/\s+/g, "-")}`,
         name,
         price,
@@ -421,9 +455,9 @@ function setupProductForm() {
         benefits: benefits.length > 0 ? benefits : ["جودة عالية", "دعم ممتاز", "سعر مناسب"],
         package: packageItems.length > 0 ? packageItems : ["المنتج الأساسي", "دليل الاستخدام"],
         services: services.length > 0 ? services : ["خدمة عملاء", "ضمان رسمي"]
-      });
+      };
 
-      await saveProducts(products);
+      await saveProduct(product);
       form.reset();
       updateProductPreview();
       await renderSavedProductsAdmin();
@@ -444,8 +478,7 @@ function setupProductForm() {
         return;
       }
 
-      const products = (await getSavedProducts()).filter((product) => product.id !== button.dataset.deleteProduct);
-      await saveProducts(products);
+      await deleteProduct(button.dataset.deleteProduct);
       await renderSavedProductsAdmin();
       await renderSavedProductsInShop();
     });
