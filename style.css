@@ -159,6 +159,7 @@ main {
 }
 
 /* Button Styles */
+
 .cart-btn,
 .primary-btn,
 .product-card button,
@@ -244,22 +245,6 @@ main {
   }
 }
 
-/* Hero Section */
-/*.hero {
-  align-items: center;
-  background: linear-gradient(135deg, rgba(7, 117, 236, 0.2), rgba(7, 117, 236, 0.06)), 
-              url("elmagic.png");
-  background-position: center;
-  background-repeat: no-repeat;
-  background-size: 100% auto;
-  color: #ffffff;
-  display: flex;
-  min-height: 800px;
-  padding: 0 8% 23%;
-  position: relative;
-  overflow: hidden;
-  box-shadow: inset 0 -140px 140px rgba(2, 8, 23, 0.16);
-}*/
  .hero{
 display: flex;
   align-items: center;
@@ -406,9 +391,12 @@ main > * {
 
 .section-heading a {
   color: #0b7cff;
+  background-color: red;
   font-weight: 800;
-  transition: all 0.3s ease;
+  transition: all 0.3s ease ;
   position: relative;
+  padding: 15px;
+  border-radius: 10px;
 }
 
 .section-heading a::after {
@@ -424,6 +412,7 @@ main > * {
 
 .section-heading a:hover {
   color: #0056cc;
+  background-color: azure;
   transform: translateX(-4px);
 }
 
@@ -432,6 +421,7 @@ main > * {
 }
 
 /* Grid Styles */
+.product-scrol,
 .category-grid,
 .product-grid,
 .deals-grid {
@@ -482,17 +472,51 @@ main > * {
 .featured-band {
   background: linear-gradient(135deg, #eaf2fb 0%, #d5e9f5 100%);
 }
-
+.product-scrol,
 .product-grid {
   grid-template-columns: repeat(3, 1fr);
 }
-
+.product-scrol.four,
 .product-grid.four {
   grid-template-columns: repeat(6, 1fr);
 }
 
 /* Product Card */
-.product-card {
+/* تحويل شبكة المنتجات إلى شريط تمرير أفقي */
+.product-scrol{
+  display: flex; /* تغيير التنسيق إلى Flexbox */
+  gap: 22px;
+  overflow-x: auto; /* تفعيل التمرير الأفقي عند خروج المنتجات عن الشاشة */
+  padding-bottom: 16px; /* مسافة بسيطة من الأسفل لظهور شريط التمرير بشكل مريح */
+  scroll-behavior: smooth; /* جعل التمرير ناعم وسلس */
+  -webkit-overflow-scrolling: touch; /* دعم التمرير باللمس لشبيه الهواتف */
+}
+
+/* ضبط عرض كارت المنتج داخل الشريط الأفقي*/
+.product-scrol .product-card {
+  flex: 0 0 280px; /* ثبات عرض كل كارت برقم محدد (مثل 280px) حتى لا ينكمش */
+  max-width: 280px;
+}
+
+/* تحسين شكل شريط التمرير (Scrollbar) ليصبح أرق وأجمل */
+.product-grid::-webkit-scrollbar {
+  height: 8px;
+}
+
+.product-scrol::-webkit-scrollbar-track {
+  background: rgba(11, 124, 255, 0.08);
+  border-radius: 10px;
+}
+
+.product-scrol::-webkit-scrollbar-thumb {
+  background: #0b7cff;
+  border-radius: 10px;
+}
+
+.product-scrol::-webkit-scrollbar-thumb:hover {
+  background: #0056cc;
+}
+ .product-scrol .product-card {
 
   background: rgba(255, 255, 255, 0.92);
   border: 1px solid rgba(203, 225, 252, 0.95);
@@ -1642,7 +1666,7 @@ button {
   }
 }
 
-
+.product-scrol.four
 .product-grid.four {
   grid-template-columns: repeat(4, minmax(0, 1fr));
 }
