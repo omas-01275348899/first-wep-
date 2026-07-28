@@ -1483,11 +1483,11 @@ button {
   .category-grid {
     grid-template-columns: repeat(3, 1fr);
   }
-
+  .product-scrol,
   .product-grid {
     grid-template-columns: repeat(4, 1fr);
   }
-
+  .product-scrol.four,
   .product-grid.four {
     grid-template-columns: repeat(3, 1fr);
   }
@@ -1612,6 +1612,7 @@ button {
   .category-grid,
   .product-grid,
   .deals-grid,
+  .product-scrol.four,
   .product-grid.four,
   .features-strip,
   .info-section {
@@ -1786,7 +1787,7 @@ button {
   .info-section {
     grid-template-columns: 1fr;
   }
-  
+  .product-scrol,
   .product-grid {
     grid-template-columns: repeat(2, 1fr);
   }
@@ -1817,7 +1818,7 @@ button {
   .details-image {
     min-height: 320px;
   }
-
+  .product-scrol,
   .category-grid,
   .product-grid,
   .deals-grid {
