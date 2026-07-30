@@ -289,13 +289,21 @@ display: flex;
 }
 
 .eyebrow {
-  color: #8ec5ff;
-  font-size: 14px;
+  color:black;
+  font-size: 25px;
   font-weight: 900;
   letter-spacing: 1px;
   margin-bottom: 10px;
   text-transform: uppercase;
-  animation: slideInRight 0.8s ease-out 0.1s both;
+  animation: ev 2s infinite ;
+}
+@keyframes ev{
+  0%{
+    color: blue;
+  }
+  50%{
+    color:chartreuse
+  }
 }
 
 .hero h1 {
@@ -377,17 +385,43 @@ main > * {
 .section-heading {
   align-items: center;
   border-bottom: 1px solid rgba(11, 124, 255, 0.14);
-  display: flex;
-  justify-content: space-between;
+  
+  justify-content: center;
   margin-bottom: 28px;
   padding-bottom: 12px;
   font-size: 20px;
 }
 
 .section-heading h2 {
-  color: #0f172a;
+  
   font-size: 32px;
+  color: red;
+animation: change-color 3s infinite;
+border: 1px solid black;
+padding: 5px;
+background-color: #8ec5ff;
+border-radius: 10px;
+width: 100%;
+text-align: center;
+justify-content: center;
 }
+
+@keyframes change-color {
+0% {
+color: red;
+}
+50% {
+color: blue;
+}
+75%{
+  color: chartreuse;
+}
+100% {
+color:brown;
+}
+}
+  
+
 
 .section-heading a {
   color: #0b7cff;
@@ -426,7 +460,8 @@ main > * {
 .product-grid,
 .deals-grid {
   display: grid;
-  gap: 22px;
+  gap: 12px;
+  
 }
 
 .category-grid {
@@ -499,7 +534,7 @@ main > * {
 }
 
 /* تحسين شكل شريط التمرير (Scrollbar) ليصبح أرق وأجمل */
-.product-grid::-webkit-scrollbar {
+.product-scrol::-webkit-scrollbar {
   height: 8px;
 }
 
@@ -547,8 +582,8 @@ main > * {
 
 .product-card h3 {
   
-  font-size: 20px;
-  padding: 16px 16px 8px;
+  font-size: 15px;
+  
   overflow: auto;
   
 }
@@ -567,7 +602,7 @@ main > * {
 }
 
 .product-card button {
-  margin: 0 16px 16px;
+  margin: outo  16px 16px;
 }
 
 /* Page Title */
@@ -1455,8 +1490,16 @@ button {
 
 .product-card {
   position: relative;
+
+}
+/* 1. اجعل الكارت يتصرف كـ Flexbox عمودي */
+.product-card {
+  display: flex;
+  flex-direction: column;
+  height: 100%; /* لضمان تساوي ارتفاع جميع الكروت */
 }
 
+/* 2. اجعل الزر يتمدد ويدفع نفسه للأسفل تماماً */
 .product-badge {
   background: linear-gradient(135deg, #0b7cff, #0056cc);
   border-radius: 999px;
@@ -1780,6 +1823,7 @@ button {
   }
 
   .features-strip,
+  .product-scrol.four,
   .product-grid.four {
     grid-template-columns: repeat(2, minmax(0, 1fr));
   }
@@ -1820,6 +1864,7 @@ button {
   }
   .product-scrol,
   .category-grid,
+  .product-scrol,
   .product-grid,
   .deals-grid {
     grid-template-columns: 1fr;
