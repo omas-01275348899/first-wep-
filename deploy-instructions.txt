@@ -1,0 +1,17 @@
+1. اختر اسم نطاق .com مثل: elmagicstore.com
+2. ادخل إلى Netlify أو Hostinger أو أي استضافة تدعم ملفات HTML ثابتة.
+3. ارفع مجلد المشروع بالكامل.
+4. تأكد أن الملفات الرئيسية هي:
+   - index.html
+   - shop.html
+   - contact.html
+   - iptv.html
+   - product-details.html
+   - style.css
+   - script.js
+   - imgg/
+   - robots.txt
+   - sitemap.xml
+5. بعد الرفع، اربط الدومين الجديد مع الاستضافة.
+6. تأكد من أن الرابط يعمل على: https://elmagicstore.com
+7. إذا أردت SEO أقوى، أضف Google Search Console ودعوة الموقع هناك.

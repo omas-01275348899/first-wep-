@@ -1,7 +1,7 @@
 const CART_KEY = "omarx_store_cart";
 const PRODUCTS_KEY = "omarx_store_products";
 const ORDERS_KEY = "omarx_store_orders";
-const STORE_WHATSAPP_NUMBER = "201275348899";
+const STORE_WHATSAPP_NUMBER = "+201214875203";
 const DEFAULT_PRODUCT_IMAGE = "https://images.unsplash.com/photo-1556742502-ec7c0e9f34b1?auto=format&fit=crop&w=900&q=80";
 const SUPABASE_URL = "https://hibhefnxtuwijrpvrbdg.supabase.co";
 const SUPABASE_ANON_KEY = "sb_publishable_4eCNpZWE6fs6E_6u185njQ_hjEY5O-6";
@@ -687,14 +687,43 @@ ${itemsText}
 رقم الطلب: ${order.id}`;
 }
 
+function createWhatsAppInquiryUrl(message) {
+  const encodedMessage = encodeURIComponent(message.trim() || "مرحبا، أريد طلبًا من صفحة IPTV.");
+  const normalizedNumber = STORE_WHATSAPP_NUMBER.trim().replace(/\D/g, "");
+
+  if (normalizedNumber) {
+    return `https://wa.me/${normalizedNumber}?text=${encodedMessage}`;
+  }
+
+  return `https://wa.me/?text=${encodedMessage}`;
+}
+
 function createWhatsAppOrderUrl(order) {
   const message = encodeURIComponent(createWhatsAppOrderMessage(order));
+  const normalizedNumber = STORE_WHATSAPP_NUMBER.trim().replace(/\D/g, "");
 
-  if (STORE_WHATSAPP_NUMBER.trim()) {
-    return `https://wa.me/${STORE_WHATSAPP_NUMBER}?text=${message}`;
+  if (normalizedNumber) {
+    return `https://wa.me/${normalizedNumber}?text=${message}`;
   }
 
   return `https://wa.me/?text=${message}`;
+}
+
+function setupWhatsAppButtons() {
+  document.querySelectorAll("[data-whatsapp-message]").forEach((element) => {
+    if (element.dataset.whatsappBound === "true") {
+      return;
+    }
+
+    element.dataset.whatsappBound = "true";
+    element.addEventListener("click", (event) => {
+      const message = element.dataset.whatsappMessage || "مرحبا، أريد طلبًا من صفحة IPTV.";
+      const url = createWhatsAppInquiryUrl(message);
+
+      window.open(url, "_blank", "noopener,noreferrer");
+      event.preventDefault();
+    });
+  });
 }
 
 function formatOrderDate(value) {
@@ -771,6 +800,7 @@ async function initStore() {
   setupProductForm();
   await renderSavedProductsAdmin();
   setupAddToCartButtons();
+  setupWhatsAppButtons();
   setupCartPageActions();
   renderCartPage();
   renderCheckoutPage();

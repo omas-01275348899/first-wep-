@@ -429,7 +429,7 @@ color:brown;
   font-weight: 800;
   transition: all 0.3s ease ;
   position: relative;
-  padding: 15px;
+  padding: 15px; 
   border-radius: 10px;
 }
 
@@ -469,6 +469,7 @@ color:brown;
 }
 
 .category {
+  display: block;
   background: #ffffff;
   border: 2px solid #e5e7eb;
   border-radius: 8px;
