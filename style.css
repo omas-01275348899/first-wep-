@@ -424,16 +424,34 @@ color:brown;
 
 
 .section-heading a {
-  color: #0b7cff;
+  /*color: #0b7cff;
   background-color: red;
   font-weight: 800;
   transition: all 0.3s ease ;
   position: relative;
   padding: 15px; 
-  border-radius: 10px;
+  border-radius: 10px;*/
+  background-color: #007bff; /* لون الأزرق الأساسي للتطبيق */
+    color: #ffffff !important; /* لون النص أبيض ناصع */
+    font-weight: bold;
+    border: none;
+    padding: 10px 24px;
+    border-radius: 8px; /* حواف دائرية ناعمة */
+    cursor: pointer;
+    transition: all 0.3s ease; /* تأثير الانتقال الناعم */
+    box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+    display: inline-block;
+    text-decoration: none;
+    margin-top: 10px;
+    width: 100%;
+}
+.section-heading a:hover {
+  background-color: #0056cc; /* لون أزرق أغمق عند التمرير */
+  transform: translateY(-2px); /* رفع الزر قليلاً عند التمرير */
+  box-shadow: 0 6px 12px rgba(0, 0, 0, 0.15); /* زيادة الظل عند التمرير */
 }
 
-.section-heading a::after {
+/*.section-heading a::after {
   content: '';
   position: absolute;
   bottom: -2px;
@@ -452,7 +470,7 @@ color:brown;
 
 .section-heading a:hover::after {
   width: 100%;
-}
+}*/
 
 /* Grid Styles */
 .product-scrol,
