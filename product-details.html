@@ -441,7 +441,7 @@
       }
     };
 
-    const savedProducts = JSON.parse(localStorage.getItem("omarx_store_products") || "[]");
+    const savedProducts = JSON.parse(localStorage.getItem("ALI_SAT_store_products") || "[]");
     const allProducts = [...savedProducts, ...Object.entries(defaultProducts).map(([id, product]) => ({
       id,
       name: product.title,
@@ -472,7 +472,7 @@
     const buyNowBtn = document.getElementById("buyNowBtn");
 
     function addCurrentProductToCart() {
-      const cart = JSON.parse(localStorage.getItem("omarx_store_cart") || "[]");
+      const cart = JSON.parse(localStorage.getItem("ALI_SAT_store_cart") || "[]");
       const existingProduct = cart.find((item) => item.id === product.id);
 
       if (existingProduct) {
@@ -487,7 +487,7 @@
         });
       }
 
-      localStorage.setItem("omarx_store_cart", JSON.stringify(cart));
+      localStorage.setItem("ALI_SAT_store_cart", JSON.stringify(cart));
       return cart;
     }
 

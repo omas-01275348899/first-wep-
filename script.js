@@ -6,7 +6,8 @@ const DEFAULT_PRODUCT_IMAGE = "https://images.unsplash.com/photo-1556742502-ec7c
 const SUPABASE_URL = "https://hibhefnxtuwijrpvrbdg.supabase.co";
 const SUPABASE_ANON_KEY = "sb_publishable_4eCNpZWE6fs6E_6u185njQ_hjEY5O-6";
 const SUPABASE_PRODUCTS_TABLE = "products";
-
+//الثوابت 
+// Function to check if Supabase is properly configured
 function isSupabaseConfigured() {
   return Boolean(
     SUPABASE_URL &&
