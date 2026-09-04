@@ -6,6 +6,26 @@ const DEFAULT_PRODUCT_IMAGE = "https://images.unsplash.com/photo-1556742502-ec7c
 const SUPABASE_URL = "https://hibhefnxtuwijrpvrbdg.supabase.co";
 const SUPABASE_ANON_KEY = "sb_publishable_4eCNpZWE6fs6E_6u185njQ_hjEY5O-6";
 const SUPABASE_PRODUCTS_TABLE = "products";
+
+function escapeHTML(value) {
+  return String(value ?? "").replace(/[&<>'"]/g, (character) => ({
+    "&": "&amp;",
+    "<": "&lt;",
+    ">": "&gt;",
+    "'": "&#39;",
+    '"': "&quot;"
+  })[character]);
+}
+
+function getSafeImageUrl(value) {
+  const imageUrl = String(value || "").trim();
+
+  if (imageUrl.startsWith("data:image/") || imageUrl.startsWith("https://") || imageUrl.startsWith("http://")) {
+    return imageUrl;
+  }
+
+  return DEFAULT_PRODUCT_IMAGE;
+}
 //الثوابت 
 // Function to check if Supabase is properly configured
 function isSupabaseConfigured() {
@@ -297,13 +317,14 @@ function setupAddToCartButtons() {
 
 function createProductCard(product) {
   const productUrl = `product-details.html?product=${encodeURIComponent(product.id)}`;
+  const imageUrl = getSafeImageUrl(product.image);
 
   return `
-    <article class="product-card custom-product-card" data-custom-product="${product.id}">
-      <a href="${productUrl}" class="product-image-link">
-        <img src="${product.image}" alt="${product.name}" />
+    <article class="product-card custom-product-card" data-custom-product="${escapeHTML(product.id)}">
+      <a href="${escapeHTML(productUrl)}" class="product-image-link">
+        <img src="${escapeHTML(imageUrl)}" alt="${escapeHTML(product.name)}" />
       </a>
-      <h3>${product.name}</h3>
+      <h3>${escapeHTML(product.name)}</h3>
       <p>$${Number(product.price).toFixed(2)}</p>
       <button type="button">إضافة للسلة</button>
     </article>
@@ -344,6 +365,20 @@ function getImageFromForm() {
     const imageUrl = imageUrlInput.value.trim();
 
     if (imageUrl) {
+      let parsedUrl;
+
+      try {
+        parsedUrl = new URL(imageUrl);
+      } catch (error) {
+        reject(new Error("رابط الصورة غير صحيح."));
+        return;
+      }
+
+      if (!/^https?:$/.test(parsedUrl.protocol)) {
+        reject(new Error("رابط الصورة يجب أن يبدأ بـ http أو https."));
+        return;
+      }
+
       resolve(imageUrl);
       return;
     }
@@ -352,6 +387,11 @@ function getImageFromForm() {
 
     if (!file) {
       resolve(DEFAULT_PRODUCT_IMAGE);
+      return;
+    }
+
+    if (!file.type.startsWith("image/") || file.size > 5 * 1024 * 1024) {
+      reject(new Error("اختر ملف صورة صالحًا حجمه أقل من 5 ميجابايت."));
       return;
     }
 
@@ -413,13 +453,13 @@ async function renderSavedProductsAdmin() {
 
   savedProducts.innerHTML = products.map((product) => `
     <article class="saved-product">
-      <img src="${product.image}" alt="${product.name}" />
+      <img src="${escapeHTML(getSafeImageUrl(product.image))}" alt="${escapeHTML(product.name)}" />
       <div>
-        <h3>${product.name}</h3>
+        <h3>${escapeHTML(product.name)}</h3>
         <p>$${Number(product.price).toFixed(2)}</p>
-        <span>${product.description}</span>
+        <span>${escapeHTML(product.description)}</span>
       </div>
-      <button type="button" data-delete-product="${product.id}">حذف</button>
+      <button type="button" data-delete-product="${escapeHTML(product.id)}">حذف</button>
     </article>
   `).join("");
 }
@@ -446,6 +486,15 @@ function setupProductForm() {
       const benefits = parseListInput(document.getElementById("productBenefits").value);
       const packageItems = parseListInput(document.getElementById("productPackage").value);
       const services = parseListInput(document.getElementById("productServices").value);
+
+      if (!name || name.length > 120 || !Number.isFinite(price) || price <= 0 || price > 100000000) {
+        throw new Error("أدخل اسمًا صحيحًا وسعرًا موجبًا ضمن الحد المسموح.");
+      }
+
+      if (description.length > 2000 || [specs, benefits, packageItems, services].some((items) => items.some((item) => item.length > 300))) {
+        throw new Error("بيانات المنتج أطول من الحد المسموح.");
+      }
+
       const image = await getImageFromForm();
       const product = {
         id: `${Date.now()}-${name.toLowerCase().replace(/\s+/g, "-")}`,
@@ -516,18 +565,18 @@ function renderCartPage() {
 
   cartItems.innerHTML = cart.map((item) => `
     <article class="cart-item">
-      <img src="${item.image}" alt="${item.name}" />
+      <img src="${escapeHTML(getSafeImageUrl(item.image))}" alt="${escapeHTML(item.name)}" />
       <div>
-        <h3>${item.name}</h3>
+        <h3>${escapeHTML(item.name)}</h3>
         <p>$${item.price.toFixed(2)}</p>
       </div>
       <div class="quantity-controls">
-        <button type="button" data-action="decrease" data-id="${item.id}">-</button>
+        <button type="button" data-action="decrease" data-id="${escapeHTML(item.id)}">-</button>
         <span>${item.quantity}</span>
-        <button type="button" data-action="increase" data-id="${item.id}">+</button>
+        <button type="button" data-action="increase" data-id="${escapeHTML(item.id)}">+</button>
       </div>
       <strong>$${(item.price * item.quantity).toFixed(2)}</strong>
-      <button class="remove-item" type="button" data-action="remove" data-id="${item.id}">حذف</button>
+      <button class="remove-item" type="button" data-action="remove" data-id="${escapeHTML(item.id)}">حذف</button>
     </article>
   `).join("");
 }
@@ -618,9 +667,9 @@ function renderCheckoutPage() {
 
   checkoutItems.innerHTML = cart.map((item) => `
     <article class="checkout-item">
-      <img src="${item.image}" alt="${item.name}" />
+      <img src="${escapeHTML(getSafeImageUrl(item.image))}" alt="${escapeHTML(item.name)}" />
       <div>
-        <h3>${item.name}</h3>
+        <h3>${escapeHTML(item.name)}</h3>
         <p>${item.quantity} x $${item.price.toFixed(2)}</p>
       </div>
       <strong>$${(item.price * item.quantity).toFixed(2)}</strong>
@@ -762,17 +811,17 @@ function renderOrdersPage() {
       </div>
 
       <div class="customer-details">
-        <p><strong>الاسم:</strong> ${order.name}</p>
-        <p><strong>الهاتف:</strong> ${order.phone}</p>
-        <p><strong>العنوان:</strong> ${order.address}</p>
+        <p><strong>الاسم:</strong> ${escapeHTML(order.name)}</p>
+        <p><strong>الهاتف:</strong> ${escapeHTML(order.phone)}</p>
+        <p><strong>العنوان:</strong> ${escapeHTML(order.address)}</p>
       </div>
 
       <div class="order-products">
         ${order.items.map((item) => `
           <div class="order-product">
-            <img src="${item.image}" alt="${item.name}" />
+            <img src="${escapeHTML(getSafeImageUrl(item.image))}" alt="${escapeHTML(item.name)}" />
             <div>
-              <h3>${item.name}</h3>
+              <h3>${escapeHTML(item.name)}</h3>
               <p>${item.quantity} x $${Number(item.price).toFixed(2)}</p>
             </div>
             <strong>$${(item.price * item.quantity).toFixed(2)}</strong>

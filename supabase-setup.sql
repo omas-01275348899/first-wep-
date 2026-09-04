@@ -1,5 +1,5 @@
 -- Run once in Supabase: SQL Editor > New query > Run.
--- This lets the public site read, add, and remove products without a login.
+-- The public site can read products. Product management must use an authenticated server/admin flow.
 
 create table if not exists public.products (
   id text primary key,
@@ -28,12 +28,11 @@ alter table public.products enable row level security;
 drop policy if exists "Anyone can view products" on public.products;
 drop policy if exists "Anyone can add products" on public.products;
 drop policy if exists "Anyone can delete products" on public.products;
+drop policy if exists "Authenticated admins can add products" on public.products;
+drop policy if exists "Authenticated admins can delete products" on public.products;
 
 create policy "Anyone can view products"
   on public.products for select to anon using (true);
 
-create policy "Anyone can add products"
-  on public.products for insert to anon with check (true);
-
-create policy "Anyone can delete products"
-  on public.products for delete to anon using (true);
+-- Do not grant insert/delete to anon. Add narrowly scoped authenticated admin policies
+-- after configuring Supabase Auth and an admin role on the server.

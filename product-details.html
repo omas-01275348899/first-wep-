@@ -456,17 +456,34 @@
 
     const params = new URLSearchParams(window.location.search);
     const productKey = params.get("product") || "receiver-hd";
-    const product = allProducts.find((item) => item.id === productKey) || allProducts.find((item) => item.id === "receiver-hd") || defaultProducts["receiver-hd"];
+    const fallbackProduct = allProducts[0];
+    const product = allProducts.find((item) => item.id === productKey) || fallbackProduct;
 
-    document.getElementById("productImage").src = product.image || defaultProducts["receiver-hd"].image;
+    function getSafeImageUrl(value) {
+      const imageUrl = String(value || "").trim();
+      return imageUrl.startsWith("data:image/") || imageUrl.startsWith("https://") || imageUrl.startsWith("http://")
+        ? imageUrl
+        : fallbackProduct.image;
+    }
+
+    function renderList(elementId, values, fallback) {
+      const element = document.getElementById(elementId);
+      element.replaceChildren(...(values || [fallback]).map((value) => {
+        const item = document.createElement("li");
+        item.textContent = value;
+        return item;
+      }));
+    }
+
+    document.getElementById("productImage").src = getSafeImageUrl(product.image);
     document.getElementById("productImage").alt = product.name || product.title;
     document.getElementById("productTitle").textContent = product.name || product.title;
     document.getElementById("productPrice").textContent = `$${Number(product.price || 0).toFixed(2)}`;
     document.getElementById("productDescription").textContent = product.description || "";
-    document.getElementById("productSpecs").innerHTML = (product.specs || ["لا توجد مواصفات إضافية"]).map((spec) => `<li>${spec}</li>`).join("");
-    document.getElementById("productBenefits").innerHTML = (product.benefits || ["جودة عالية", "دعم ممتاز"]).map((item) => `<li>${item}</li>`).join("");
-    document.getElementById("productPackage").innerHTML = (product.package || ["المنتج الأساسي"]).map((item) => `<li>${item}</li>`).join("");
-    document.getElementById("productServices").innerHTML = (product.services || ["خدمة عملاء"]).map((item) => `<li>${item}</li>`).join("");
+    renderList("productSpecs", product.specs, "لا توجد مواصفات إضافية");
+    renderList("productBenefits", product.benefits, "جودة عالية");
+    renderList("productPackage", product.package, "المنتج الأساسي");
+    renderList("productServices", product.services, "خدمة عملاء");
 
     const addToCartBtn = document.getElementById("addToCartBtn");
     const buyNowBtn = document.getElementById("buyNowBtn");
@@ -482,7 +499,7 @@
           id: product.id,
           name: product.name || product.title,
           price: Number(product.price || 0),
-          image: product.image || defaultProducts["receiver-hd"].image,
+          image: getSafeImageUrl(product.image),
           quantity: 1
         });
       }
