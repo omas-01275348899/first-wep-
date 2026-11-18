@@ -776,6 +776,25 @@ function setupWhatsAppButtons() {
   });
 }
 
+function setupContactForm() {
+  const form = document.getElementById("contactForm");
+
+  if (!form) {
+    return;
+  }
+
+  form.addEventListener("submit", (event) => {
+    event.preventDefault();
+
+    const name = form.elements.name.value.trim();
+    const phone = form.elements.phone.value.trim();
+    const message = form.elements.message.value.trim();
+    const whatsappMessage = `رسالة جديدة من صفحة تواصل معنا\nالاسم: ${name}\nرقم الهاتف: ${phone}\nالرسالة: ${message}`;
+
+    window.open(createWhatsAppInquiryUrl(whatsappMessage), "_blank", "noopener,noreferrer");
+  });
+}
+
 function formatOrderDate(value) {
   return new Date(value).toLocaleString();
 }
@@ -851,6 +870,7 @@ async function initStore() {
   await renderSavedProductsAdmin();
   setupAddToCartButtons();
   setupWhatsAppButtons();
+  setupContactForm();
   setupCartPageActions();
   renderCartPage();
   renderCheckoutPage();

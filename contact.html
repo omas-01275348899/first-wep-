@@ -20,21 +20,21 @@
     <a class="logo" href="index.html">elmagic_store</a>
 
     <nav class="nav">
-      <a href="index.html">الرئيسية</a>
-      <a href="shop.html">المتجر</a>
+      <a href="index.html">GROPE</a>
+      <a href="shop.html">SHOP</a>
      <!-- <a href="add-product.html">إضافة منتج</a>
       <a href="orders.html">الطلبات</a>-->
-      <a class="active" href="contact.html">تواصل معنا</a>
+      <a class="active" href="contact.html">CONTACT US</a>
     </nav>
 
-    <a class="cart-btn" href="cart.html">السلة <span class="cart-count">0</span></a>
+    <a class="cart-btn" href="cart.html">CART <span class="cart-count">0</span></a>
   </header>
 
   <main>
     <section class="page-title">
       <p class="eyebrow">خدمة العملاء</p>
       <h1>تواصل معنا</h1>
-      <p>لو عندك سؤال أو طلب خاص، ابعت لنا بياناتك وسنرد عليك في أقرب وقت.</p>
+      <p>اكتب بياناتك ورسالتك، وسنفتح لك واتساب برسالة جاهزة لإرسالها إلينا.</p>
     </section>
 
     <section class="section contact-layout">
@@ -46,17 +46,18 @@
         <p><strong>مواعيد العمل:</strong> من 10 صباحًا حتى 10 مساءً</p>
       </div>
 
-      <form class="contact-form">
+      <form class="contact-form" id="contactForm">
         <label for="name">الاسم</label>
-        <input id="name" type="text" placeholder="اكتب اسمك" />
+        <input id="name" name="name" type="text" placeholder="اكتب اسمك" autocomplete="name" required />
 
         <label for="tel">رقم الهاتف</label>
-        <input id="tel" type="tel" placeholder="اكتب رقم الهاتف" />
+        <input id="tel" name="phone" type="tel" placeholder="اكتب رقم الهاتف" autocomplete="tel" required />
 
         <label for="message">الرسالة</label>
-        <textarea id="message" rows="6" placeholder="اكتب رسالتك هنا"></textarea>
+        <textarea id="message" name="message" rows="6" placeholder="اكتب رسالتك هنا" required></textarea>
 
         <button type="submit">إرسال الرسالة</button>
+        <p class="contact-form-note" role="status">بعد فتح واتساب، اضغط إرسال لإيصال رسالتك.</p>
       </form>
     </section>
   </main>
